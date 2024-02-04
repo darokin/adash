@@ -1,5 +1,5 @@
-#ifndef ADASH_WIDGETCOLOR_H
-#define ADASH_WIDGETCOLOR_H
+#ifndef ADASH_WIDGETANSI_H
+#define ADASH_WIDGETANSI_H
 
 #include "widget.hpp"
 
@@ -11,7 +11,7 @@ public:
     WidgetANSI(std::wstring _title);
     WidgetANSI(std::wstring _title, const char* _ansiFilePath);
     ~WidgetANSI();
-    virtual void draw();
+    void draw();
 };
 
 #endif

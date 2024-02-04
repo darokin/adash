@@ -54,15 +54,15 @@ static const float widgetSizeRatio[(int)wSizeMode::MODE_COUNT] {
 
 class Widget {
 protected:
-    WINDOW*     win;
     uint16_t    titlePosX;
-    
+    bool        bBorder{true};
+
 public:
+    WINDOW*     win;
     std::wstring title{};
     v2d         pos{0, 0};
     v2d         size{80, 25};
     int         colorPair;
-    std::vector<wchar_t[512]> contentLines{};
 
     wSizeMode modeH;
     wSizeMode modeV;
@@ -73,12 +73,15 @@ public:
     virtual ~Widget(); // so derived class automatically call widget destructor
 
     virtual void draw();
-    void mainDraw();
+    virtual void handleKey(int _keycode);
+    void mainDraw(bool forceSelection);
+    void drawBorder(bool forceSelection);
 
     void refreshPosAndSize();
     void setPos(v2d _pos);
     void setColorPair(int _colorPair);
     void setSize(v2d _size);
+    void setBorder(int _bBorder);
 };
 
 #endif

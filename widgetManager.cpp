@@ -1,10 +1,16 @@
 #include <stdexcept>
+#include "screen.hpp"
 #include "widgetManager.hpp"
 #include "widget.hpp"
 
 extern wchar_t debugText[256];
 
 WidgetManager* WidgetManager::widgetmgr = nullptr;
+
+WidgetManager::WidgetManager() {
+    this->selectedWidget = nullptr;
+    this->indSelected = 0;
+}
 WidgetManager* WidgetManager::getInstance() {
     if (widgetmgr == nullptr) {
         widgetmgr = new WidgetManager();
@@ -15,8 +21,52 @@ WidgetManager* WidgetManager::getInstance() {
 void WidgetManager::drawWidgets() {
     for (auto wRow : widgets) {
         for (auto w : wRow) {
-            w->mainDraw();
+            w->mainDraw((w == this->selectedWidget));
         }
+    }
+}
+
+void WidgetManager::handleKey(int _keycode) {
+    if (_keycode == 9) { // TAB
+    	this->tabSelection();
+        return;
+    } else if (_keycode == 27) {
+        this->deselection();
+        return;
+    }
+    
+    if (!indSelected) 
+        return;
+    if (selectedWidget == nullptr)
+        return;
+
+    selectedWidget->handleKey(_keycode);
+}
+
+void WidgetManager::deselection() {
+    if (this->selectedWidget != nullptr)
+        this->selectedWidget->mainDraw(false);   
+    this->indSelected = 0;
+    this->selectedWidget = nullptr;
+}
+
+void WidgetManager::tabSelection() {
+    if (this->selectedWidget == nullptr) {
+        if (this->widgetsFlat.size() < 1)
+            return;
+        
+        this->indSelected = 0;
+    } else {
+        if (this->indSelected + 1 >= this->widgetsFlat.size())
+            this->indSelected = 0;
+        else
+            this->indSelected++;
+    }
+    try {
+        this->selectedWidget = this->widgetsFlat.at(this->indSelected);
+    } catch (std::out_of_range const& exc) {
+        //std::cout << exc.what() << '\n';
+        this->deselection();
     }
 }
 
@@ -28,6 +78,8 @@ bool WidgetManager::addWidget(unsigned short _row, Widget* _widget, wSizeMode _m
     _widget->modeV = _mv;
     _widget->fixedH = _h;
     _widget->fixedV = _v;
+
+    this->widgetsFlat.push_back(_widget);
 
     if (_row > this->widgets.size() + 1) {
         // missing rows !
@@ -52,26 +104,16 @@ bool WidgetManager::addWidget(unsigned short _row, Widget* _widget, wSizeMode _m
     return true;
 }
 
-void WidgetManager::refreshWidgetsSizes() {
-    int startX {};
-    int startY {};
-
-    //swprintf(debugText, 256, L"\0"); 
-
-    int termCols{};
-    int termLines{};
-    getmaxyx(stdscr, termLines, termCols);   
-    termLines-=1;//-; // pour la ligne de statut en bas
-    
+void WidgetManager::refreshWidgetsSizes(unsigned short _termCols, unsigned short _termLines) {
+    int termCols{_termCols}; 
+    int termLines{_termLines - 1}; // -1 pour la ligne de statut en bas   
+    int startX, startY {};
     v2d tmpSize{}, tmpPos{};
+
     for (auto wRow : widgets) {
-        // Pour chaque ligne on calcule la hauteur
-        // D'abord si on a une ligne avant on prend en compte le décalage  
         startX = 0;  
         for (auto w : wRow) {
             tmpSize = {};
-            // En fonction du mode on va mettre les valeurs de position et de taille à jour
-
             if (w->modeH == wSizeMode::MODE_FIX)
                 tmpSize.x = w->fixedH;
             else if (w->modeH == wSizeMode::MODE_FULL)
@@ -85,29 +127,7 @@ void WidgetManager::refreshWidgetsSizes() {
                 tmpSize.y = termLines - startY;
             else
                 tmpSize.y = termLines * widgetSizeRatio[(int)w->modeV];
-/*
-            // On calcule la largeur
-            switch (w->modeV)
-            {
-            case wSizeMode::MODE_FIX:
-                tmpSize.y = w->fixedV;
-                break;
-            case wSizeMode::MODE_2:
-                tmpSize.y = termLines * 0.2;
-                break;
-            case wSizeMode::MODE_8:
-                tmpSize.y = termLines * 0.2;
-                break;
-            case wSizeMode::MODE_33:
-                tmpSize.y = termLines / 3.0;
-                break;
-            case wSizeMode::MODE_FULL:
-                tmpSize.y = termLines - startY;
-                break;
-            default:
-                break;
-            }
-*/
+
             // On clean pour les arrondis éventuels
             if (tmpSize.x + tmpPos.x > termCols)
                 tmpSize.x = termCols - tmpPos.x;
@@ -124,8 +144,6 @@ void WidgetManager::refreshWidgetsSizes() {
             w->refreshPosAndSize();
 
             //swprintf(debugText, 256, L"%ls%ls [%d, %d] (%dx%d)\n", debugText, w->title.c_str(), startX, startY, tmpSize.x, tmpSize.y); 
-            //w->
-            //swprintf()
 
             // On décale le tout pour le prochain widget
             startX += tmpSize.x;

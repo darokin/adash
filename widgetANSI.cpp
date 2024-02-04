@@ -16,6 +16,7 @@ WidgetANSI::WidgetANSI(std::wstring _title, v2d _pos, v2d _size) : Widget::Widge
 WidgetANSI::WidgetANSI(std::wstring _title) : Widget::Widget(_title) {
 }
 WidgetANSI::WidgetANSI(std::wstring _title, const char* _ansiFilePath) : Widget::Widget(_title) {
+    this->bBorder = false;
     ansiFile.open(_ansiFilePath);
     if (!ansiFile.is_open())
         std::cout << "Unable to open ANSI file '" << _ansiFilePath << "'" << std::endl; 
@@ -25,23 +26,17 @@ WidgetANSI::~WidgetANSI() {
         ansiFile.close();
 }
 void WidgetANSI::draw() {
+    wbkgd(this->win, COLOR_PAIR(this->colorPair));
+    wattroff(this->win, COLOR_PAIR(this->colorPair) | A_BOLD);   
+
     if (!ansiFile.is_open())
         return;
-
-    //werase(this->win);
-    
     std::string _line;
     int x{0}, y{1};
-    while (getline(this->ansiFile, _line))
-    {
-        wmove(this->win, y+2, x+2);
-        waddwstr(this->win, L"ansi dbg");
-        break;
+    this->ansiFile.seekg(0);
+    while (getline(this->ansiFile, _line)) {
         if (!cursesANSI::mvwaddnANSIstr(this->win, y, x, _line, this->size.x))
             break;
         y++;
     }
-
-
-    //wrefresh(this->win);
 }

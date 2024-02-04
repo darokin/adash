@@ -7,6 +7,8 @@
 #include <locale.h>
 #include "cursesAnsi.hpp"
 
+#define CURSES_ANSI_COLOR_CODE_DEC  50
+
 namespace cursesANSI {
     enum class State {
     STATE_NONE,
@@ -35,7 +37,7 @@ namespace cursesANSI {
             if (col.colorFG == fg && col.colorBG == bg)
                 return col.colorPairIndex;
         }
-        int nID = vcolors.size() + 1;
+        int nID = vcolors.size() + 1 + CURSES_ANSI_COLOR_CODE_DEC;
         init_pair(nID, fg, bg);
         vcolors.push_back(cursesColorPairs{nID, fg, bg});
         return nID;
@@ -155,9 +157,6 @@ namespace cursesANSI {
             if (c == ASCII_EOF)
                 return false;
 
-            mvwaddwstr(_win, _startY, _x, L"DEBUG ANSI CP437_unicode[(int)printChar - 128]");
-            return true;
-            
             printChar = feedChar(c, _win);
             if (printChar != 0) {
                 // == ASCII char en Unicode ne ressortiront pas donc on les converti en Unicode le plus proche

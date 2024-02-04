@@ -38,6 +38,14 @@ void Widget::setSize(v2d _size) {
 void Widget::setColorPair(int _colorPair) {
     this->colorPair = _colorPair;
 }
+void Widget::setBorder(int _bBorder) {
+    this->bBorder = _bBorder;
+}
+
+void Widget::handleKey(int _keycode) {
+
+};
+
 void Widget::refreshPosAndSize() {
     mvwin(this->win, this->pos.y, this->pos.x);
     wresize(this->win, this->size.y, this->size.x);
@@ -47,35 +55,53 @@ void Widget::draw() {
     mvwaddwstr(this->win, 0, this->titlePosX, this->title.c_str());
     //wprintw(this->win, this->title.c_str())
     
-    mvwaddwstr(this->win, 4, 4, L"PROUT");
+    mvwaddwstr(this->win, 4, 4, L"WIDGET ONLY");
 }
 
-void Widget::mainDraw() {
-    werase(this->win);
-    wbkgd(this->win, COLOR_PAIR(this->colorPair));
-    wattron(this->win, COLOR_PAIR(this->colorPair) | A_BOLD);
-
+void Widget::drawBorder(bool forceSelection) {
     int _py = 0;
     int _px = 0;
+
+    int colorPairSelection = colorPairs::PINK_ON_BLACK;
+    if ((this->colorPair == colorPairs::BLUE_ON_WHITE)
+     || (this->colorPair == colorPairs::YELLOW_ON_WHITE)
+     || (this->colorPair == colorPairs::PINK_ON_WHITE) ) {
+        colorPairSelection = colorPairs::PINK_ON_WHITE;
+    }
+    if (forceSelection) 
+        wattron(this->win, COLOR_PAIR(colorPairSelection));
+
     for (int _tx = _px; _tx < this->size.x; _tx++) {
-        mvwaddwstr(this->win, 0, _tx, L"▀");
-        mvwaddwstr(this->win, this->size.y - 1, _tx, L"▄");
+        if (!forceSelection || (forceSelection && (_tx / 2 % 2 == 0)))
+            mvwaddwstr(this->win, 0, _tx, L"▀");
+        if (!forceSelection || (forceSelection && (_tx / 2 % 2 != 0)))
+            mvwaddwstr(this->win, this->size.y - 1, _tx, L"▄");
     }
     for (int _ty = _py; _ty < this->size.y; _ty++) {
-        mvwaddwstr(this->win, _ty, 0, L"█");
-        mvwaddwstr(this->win, _ty, _px + this->size.x - 1, L"█");
+        if (!forceSelection || (forceSelection && (_ty % 2 == 0)))
+            mvwaddwstr(this->win, _ty, 0, L"█");
+        if (!forceSelection || (forceSelection && (_ty % 2 != 0)))
+            mvwaddwstr(this->win, _ty, _px + this->size.x - 1, L"█");
     }
+    
+    if (forceSelection) 
+        wattroff(this->win, COLOR_PAIR(colorPairSelection));//wattron(this->win, COLOR_PAIR(this->colorPair) | A_BOLD);   
+}
+
+void Widget::mainDraw(bool forceSelection) {
+    werase(this->win);
+    //wbkgd(this->win, COLOR_PAIR(this->colorPair));
+    wattron(this->win, COLOR_PAIR(this->colorPair) | A_BOLD);   
+
+    if (bBorder && !forceSelection) {
+        this->drawBorder(false);
+    }
+    
     draw();
 
-    /*
-    unsigned short nLine = 1;
-    for (auto content : this->contentLines) {
-        mvwaddwstr(this->win, nLine, 0, content);
-        nLine++;
-        if (nLine >= this->size.y)
-            break;
+    if (forceSelection) {
+        this->drawBorder(true);
     }
-    */
 
     //if (bDoRefresh)
     wrefresh(this->win);

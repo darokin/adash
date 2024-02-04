@@ -9,6 +9,7 @@
 #endif
 
 enum colorPairs {
+	DEFAULT,
 	WHITE_ON_BLACK,
 	BLACK_ON_WHITE,
 	YELLOW_ON_WHITE,

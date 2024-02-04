@@ -11,6 +11,7 @@
 #else // __unix__
 	#include <unistd.h> // usleep()
     #include <ncursesw/curses.h>
+	#include <ncursesw/menu.h>
 #endif
 
 #include "screen.hpp"
@@ -19,11 +20,10 @@
 #include "widgetClock.hpp"
 #include "widgetDeco.hpp"
 #include "widgetANSI.hpp"
+#include "widgetTextFile.hpp"
 #include "utils.hpp"
 
-#define STATUS_TEXT_MAXLENGTH	2561
-
-WINDOW *wmain, *wstatus;
+#define STATUS_TEXT_MAXLENGTH	256
 
 #define DEBUG 1
 #ifdef DEBUG
@@ -31,12 +31,19 @@ WINDOW *wmain, *wstatus;
 	wchar_t debugText[256];
 #endif
 
-WidgetManager* wmgr;
+enum class ScreenState {
+	NORMAL,
+	TABSELECTION,
+	WIDGETACTIVE
+};
 
-//std::vector<Widget*> widgets;
+WINDOW *wmain, *wstatus;
+WidgetManager* wmgr;
 wchar_t statusText[STATUS_TEXT_MAXLENGTH];
-v2d termSize;
 static int statusTextPosx {1}; 
+v2d termSize;
+static ScreenState screenState {ScreenState::NORMAL};
+
 
 long long timeInMilliseconds() {
     struct timeval tv;
@@ -44,7 +51,10 @@ long long timeInMilliseconds() {
     return (((long long)tv.tv_sec)*1000)+(tv.tv_usec/1000);
 }
 
+
 //namespace ScreenWidget {
+
+/*
 void initWidgets() {
 	
 	wmgr = WidgetManager::getInstance();
@@ -59,64 +69,61 @@ void initWidgets() {
 	WidgetDeco* widgetHeader = new WidgetDeco(L"HEADER ♞");
 	widgetHeader->setType(decoType::STRIPE);
 	widgetHeader->setColorPair(colorPairs::YELLOW_ON_BLACK);
-	if (!wmgr->addWidget(1, widgetHeader, wSizeMode::MODE_FULL, wSizeMode::MODE_FIX, 0, 8)) {
+	if (!wmgr->addWidget(1, widgetHeader, wSizeMode::MODE_FULL, wSizeMode::MODE_FIX, 0, 4)) {
 		std::cout << "ERROR adding widget header" << std::endl;
 	}
 	// ================================================
 	// == ROW 2 : Pattern FIX + Clock FLOAT               
-	// COLOR
-	/*      
-	WidgetDeco* widgetColor = new WidgetDeco(L"Color");
-	widgetColor->setType(decoType::FULL_BG);
-	widgetColor->setColorPair(colorPairs::YELLOW_ON_BLACK);
-	if (!wmgr->addWidget(2, widgetColor, wSizeMode::MODE_4, wSizeMode::MODE_FIX, 18, 11)) {
-		std::cout << "ERROR adding widget color" << std::endl;
-	}
-	*/
+	// COLOR    
+	// WidgetDeco* widgetColor = new WidgetDeco(L"Color");
+	// widgetColor->setType(decoType::FULL_BG);
+	// widgetColor->setColorPair(colorPairs::YELLOW_ON_BLACK);
+	// if (!wmgr->addWidget(2, widgetColor, wSizeMode::MODE_4, wSizeMode::MODE_FIX, 18, 11)) {
+	// 	std::cout << "ERROR adding widget color" << std::endl;
+	// }
+	
 	WidgetANSI* widgetAnsi = new WidgetANSI(L"ANSI widget", "./adash_out01.ans");
-	if (!wmgr->addWidget(2, widgetAnsi, wSizeMode::MODE_4, wSizeMode::MODE_FIX, 18, 11)) {
+	if (!wmgr->addWidget(2, widgetAnsi, wSizeMode::MODE_4, wSizeMode::MODE_FIX, 18, 17)) {
 		std::cout << "ERROR adding widget ANSI" << std::endl;
 	}
 	
 	WidgetClock* widgetClock = new WidgetClock(L"Clock");
 	widgetClock->setColorPair(colorPairs::YELLOW_ON_BLACK);
-	if (!wmgr->addWidget(2, widgetClock, wSizeMode::MODE_6, wSizeMode::MODE_FIX, 0, 11)) {
+	widgetClock->setBorder(false);
+	if (!wmgr->addWidget(2, widgetClock, wSizeMode::MODE_FULL, wSizeMode::MODE_FIX, 0, 17)) {
 		std::cout << "ERROR adding widget clock" << std::endl;
 	}
-	/*
-	WidgetDeco* widgetColor2 = new WidgetDeco(L"Color");
-	widgetColor2->setType(decoType::FULL_BG);
-	widgetColor2->setColorPair(colorPairs::YELLOW_ON_BLACK);
-	if (!wmgr->addWidget(2, widgetColor2, wSizeMode::MODE_FULL, wSizeMode::MODE_FIX, 18, 11)) {
-		std::cout << "ERROR adding widget color2" << std::endl;
-	}
-	*/
+	
+	// WidgetDeco* widgetColor2 = new WidgetDeco(L"Color");
+	// widgetColor2->setType(decoType::FULL_BG);
+	// widgetColor2->setColorPair(colorPairs::YELLOW_ON_BLACK);
+	// if (!wmgr->addWidget(2, widgetColor2, wSizeMode::MODE_FULL, wSizeMode::MODE_FIX, 18, 11)) {
+	// 	std::cout << "ERROR adding widget color2" << std::endl;
+	// }
+	
 	// ================================================
 	// == ROW 2 : Third     with 20$ heigh
 	// COLOR      
-	/*
-	WidgetDeco* widgetThird1 = new WidgetDeco(L"widgetThird1");
-	widgetThird1->setColorPair(colorPairs::BLACK_ON_BLUE);
-	if (!wmgr->addWidget(3, widgetThird1, widgetModeHorizontal::MODE_33, widgetModeVertical::MODE_FIX, 0, 4)) {
-		std::cout << "ERROR adding widget widgetThird1" << std::endl;
-	}
-	Widget* widgetThird2 = new Widget(L"widgetThird2");
-	if (!wmgr->addWidget(3, widgetThird2, widgetModeHorizontal::MODE_33, widgetModeVertical::MODE_FIX, 0, 4)) {
-		std::cout << "ERROR adding widget widgetThird2" << std::endl;
-	}
-	Widget* widgetThird3 = new Widget(L"widgetThird3");
-	if (!wmgr->addWidget(3, widgetThird3, widgetModeHorizontal::MODE_FULL, widgetModeVertical::MODE_FIX, 0, 4)) {
-		std::cout << "ERROR adding widget widgetThird3" << std::endl;
-	}
-	*/
+	
+	// WidgetDeco* widgetThird1 = new WidgetDeco(L"widgetThird1");
+	// widgetThird1->setColorPair(colorPairs::BLACK_ON_BLUE);
+	// if (!wmgr->addWidget(3, widgetThird1, widgetModeHorizontal::MODE_33, widgetModeVertical::MODE_FIX, 0, 4)) {
+	// 	std::cout << "ERROR adding widget widgetThird1" << std::endl;
+	// }
+	// Widget* widgetThird2 = new Widget(L"widgetThird2");
+	// if (!wmgr->addWidget(3, widgetThird2, widgetModeHorizontal::MODE_33, widgetModeVertical::MODE_FIX, 0, 4)) {
+	// 	std::cout << "ERROR adding widget widgetThird2" << std::endl;
+	// }
+	// Widget* widgetThird3 = new Widget(L"widgetThird3");
+	// if (!wmgr->addWidget(3, widgetThird3, widgetModeHorizontal::MODE_FULL, widgetModeVertical::MODE_FIX, 0, 4)) {
+	// 	std::cout << "ERROR adding widget widgetThird3" << std::endl;
+	// }
+	
 
 	// ================================================
 	// == ROW 4 : Big text float / pattern FULL FLOAT TO BOTTOM
-	WidgetDeco* widgetBigText = new WidgetDeco(L"Big text");
-	widgetBigText->setType(decoType::CHECKBOARD);
-	widgetBigText->setType(decoType::STRIPE);
-	widgetBigText->setColorPair(colorPairs::PINK_ON_BLACK);
-	widgetBigText->setColorPair(colorPairs::YELLOW_ON_BLACK);
+	WidgetTextFile* widgetBigText = new WidgetTextFile(L"Big text", "./emoji-data.txt");
+	widgetBigText->setColorPair(colorPairs::BLUE_ON_WHITE);
 	if (!wmgr->addWidget(3, widgetBigText, wSizeMode::MODE_8, wSizeMode::MODE_FULL, 0, 0)) {
 		std::cout << "ERROR adding widget big text" << std::endl;
 	}
@@ -127,22 +134,43 @@ void initWidgets() {
 	}
 	
 
-	wmgr->refreshWidgetsSizes();
+	wmgr->refreshWidgetsSizes(termSize.x, termSize.y);
 	wrefresh(stdscr);
-	//widgets.push_back(new Widget(L"F ♞ F", {1, 1}, {8, 6}));
-	//widgets.push_back(new Widget(L"Test 中自有黄 #1", {11, 1}, {20, 6}));
-	//widgets.push_back(new Widget(L"Second 🙏🙏 wmain \u265E", {1, 8}, {30, 8}));
-	//widgets.push_back(new Widget(L"..ONLY..", {2, 4}, {10, 5}));
+	// ♞ F中自有黄 ond 🙏🙏 wmain \u265E"
 }
+*/
+
+
+void initWidgets() {
+	
+	wmgr = WidgetManager::getInstance();
+	
+	// ================================================
+	// == HEADER ROW 1
+	WidgetDeco* wHeader = new WidgetDeco(L"HEADER ♞");
+	WidgetClock* wClock = new WidgetClock(L"CLOCK");
+	Widget* wContent = new Widget(L"Content 🙏");
+		
+	wHeader->setType(decoType::STRIPE);
+	wHeader->setColorPair(colorPairs::YELLOW_ON_BLACK);
+	wmgr->addWidget(1, wHeader, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 80, 4);
+
+	wmgr->addWidget(2, wClock, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 80, 9);
+
+	wmgr->addWidget(3, wContent, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 80, 24 - 13);
+
+	wmgr->refreshWidgetsSizes(termSize.x, termSize.y);
+	wrefresh(stdscr);
+}
+
 
 void drawWidgets() {
 	wmgr->drawWidgets();
 }
-//}
 
 void drawStatusBar() {
 	werase(wstatus); // reset position
-	//wbkgd(wstatus, COLOR_PAIR(colorPairs::YELLOW_ON_BLACK));
+	wbkgd(wstatus, COLOR_PAIR(colorPairs::YELLOW_ON_BLACK));
 	wbkgd(wstatus, COLOR_PAIR(colorPairs::BLACK_ON_WHITE) | A_REVERSE);
 	//wattron(wstatus, COLOR_PAIR(colorPairs::YELLOW_ON_BLACK));
 	wmove(wstatus, 0, 2);//statusTextPosx);
@@ -175,8 +203,10 @@ void screenInit() {
 
 	// == Init color pairs
 	if (has_colors()) {     // is it necessary ?
+		use_default_colors();
 		start_color();
 	};
+	init_pair(colorPairs::DEFAULT, -1, -1);
 	init_pair(colorPairs::BLACK_ON_WHITE, COLOR_BLACK, COLOR_WHITE);
 	init_pair(colorPairs::WHITE_ON_BLACK, COLOR_WHITE, COLOR_BLACK);
 	init_pair(colorPairs::YELLOW_ON_WHITE, COLOR_YELLOW, COLOR_WHITE);
@@ -200,22 +230,6 @@ void screenInit() {
 		wdDebug = newwin(8, 60, termSize.y - (8 + 2), termSize.x - (60 + 2));
 	#endif
 	
-	/*
-	wtest = newwin(3, 20, 10, 10);
-	wattron(wtest, COLOR_PAIR(colorPairs::BLUE_ON_WHITE));
-	wmove(wtest, 0, 3);
-	//waddwstr(wtest, L"Ok test test");
-	wprintw(wtest, "%ls", L"Ok test test");
-	wrefresh(wtest);
-	
-	wtest2 = newwin(5, 12, 18, 2);
-	wattron(wtest2, COLOR_PAIR(colorPairs::BLUE_ON_WHITE));
-	wmove(wtest2, 0, 3);
-	//waddwstr(wtest, L"Ok test test");
-	wprintw(wtest2, "%ls", L"TEST 2  TEST  2    TEST 2 ");
-	wrefresh(wtest2);
-	*/	
-	
     initWidgets();
 }
 
@@ -234,6 +248,7 @@ void screenLoop() {
 	//auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startTime);
     //napms(WAIT_TIME - diff.count());
 	*/
+	bool bQuit = false;
 
     do {
 		msleep(80);
@@ -251,6 +266,10 @@ void screenLoop() {
 		// ============================================
 		// == KEY LISTENING
 		keycode = wgetch(stdscr);
+		if (keycode == -1)
+			continue;
+
+		wmgr->handleKey(keycode);
 
 		switch (keycode) {
 			case KEY_LEFT: 
@@ -266,21 +285,31 @@ void screenLoop() {
 				statusTextPosx++;
 				drawStatusBar();
 				break;
-			//case 27: break;
+			case 9: 
+				// TABULATION
+				if (screenState != ScreenState::WIDGETACTIVE)
+					screenState = ScreenState::TABSELECTION;
 			case KEY_RESIZE:
 				//swprintf(debugText, 256, L"Resize triggered"); 
 				screenResize();
 				// TODO : mouve debug win
-				wmgr->refreshWidgetsSizes();
+				wmgr->refreshWidgetsSizes(termSize.x, termSize.y);
 				wrefresh(stdscr);
 				// Refresh la status bar ou toust le stdscr une fois ?
 				// refaire les calculs avec le bon calcul du reste etc.
 				break;
+			case 27: // ESCAPE
+				if (screenState != ScreenState::NORMAL)
+					screenState = ScreenState::NORMAL;
+				else
+					bQuit = true;
+				break;
 			default:
-				;//snprintf(str, STATUS_MESSAGE_SIZE, "Key : '%d' / '%c'", keycode, (char)keycode);
+				swprintf(statusText, STATUS_TEXT_MAXLENGTH, L"Key '%d' '0x%x' [%c]", keycode, keycode, (char)keycode);
+				wrefresh(wstatus);
 		}
 
-	} while(keycode != 27);
+	} while(!bQuit);//keycode != 27);
 }
 
 /*
