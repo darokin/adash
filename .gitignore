@@ -3,4 +3,5 @@ build/
 adash
 *.o
 adash.code-workspace
+errors.txt
 
