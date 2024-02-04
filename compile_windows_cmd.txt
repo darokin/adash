@@ -1,0 +1,2 @@
+g++ -Wall -Wextra -g main.cpp screen.cpp widget.cpp widgetManager.cpp -o adash.exe -I C:\msys64\mingw64\include\ -L C:\msys64\mingw64\lib\ -lncurses -DNCURSES_STATIC
+g++ -Wall -Wextra -g main.cpp screen.cpp widget.cpp widgetDeco.cpp widgetClock.cpp widgetANSI.cpp widgetManager.cpp -o adash.exe -I C:\msys64\mingw64\include\ -L C:\msys64\mingw64\lib\ -lncurses -DNCURSES_STATIC
