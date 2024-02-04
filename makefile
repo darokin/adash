@@ -1,8 +1,8 @@
 CC	= g++
 CFLAGS	= -g -Wall -Wextra -I.
-LINKS	= -lncursesw
-DEPS	= screen.hpp widget.hpp widgetClock.hpp widgetANSI.hpp widgetDeco.hpp widgetManager.hpp cursesAnsi.hpp
-OBJ	= main.o screen.o widget.o widgetClock.o widgetANSI.o widgetDeco.o widgetManager.o cursesAnsi.o
+LINKS	= -lmenu -lncursesw
+DEPS	= screen.hpp widget.hpp widgetClock.hpp widgetANSI.hpp widgetDeco.hpp widgetManager.hpp widgetTextFile.hpp cursesAnsi.hpp
+OBJ	= main.o screen.o widget.o widgetClock.o widgetANSI.o widgetDeco.o widgetManager.o widgetTextFile.o cursesAnsi.o
 
 APP	= adash
 
