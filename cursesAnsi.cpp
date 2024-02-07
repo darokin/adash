@@ -1,4 +1,12 @@
+#ifdef _WIN32
+    #define NCURSES_WIDECHAR 1
+#endif
 #include <ncursesw/curses.h>
+//#ifdef __unix__
+//    #include <ncursesw/curses.h>
+//#else //if //defined(_WIN32)
+//    #include <ncursesw/ncurses.h>
+//#endif
 #include <iostream>
 #include <fstream>
 #include <vector>
