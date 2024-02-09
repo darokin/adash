@@ -4,7 +4,7 @@
 #include "widget.hpp"
 
 class WidgetTextFile : public Widget {
-private:
+protected:
     std::wifstream txtFile;
     std::vector<std::wstring> contentLines{};
     int cursorY {0};
