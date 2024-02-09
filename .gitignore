@@ -1,6 +1,7 @@
 logs/
 build/
 adash
+adash.exe
 *.o
 adash.code-workspace
 errors.txt

@@ -1,0 +1,101 @@
+
+# All omitted code points have Emoji=No 
+# @missing: 0000..10FFFF  ; Emoji ; No
+
+[1] (#️) number sign
+[1] (*️)       asterisk
+10] (0️..9️)    digit zero..digit nine
+[1] (©️)       copyright
+[1] (®️)       registered
+[1] (‼️)       double exclamation mark
+[1] (⁉️)       exclamation question mark
+[1] (™️)       trade mark
+[1] (ℹ️)       information
+[6] (↔️..↙️)    left-right arrow..down-left arrow
+[2] (↩️..↪️)    right arrow curving left..left arrow curving right
+[2] (⌚..⌛)    watch..hourglass done
+[1] (⌨️)       keyboard
+[1] (⏏️)       eject button
+[4] (⏩..⏬)    fast-forward button..fast down button
+[2] (⏭️..⏮️)    next track button..last track button
+[1] (⏯️)       play or pause button
+[1] (⏰)       alarm clock
+[2] (⏱️..⏲️)    stopwatch..timer clock
+[1] (⏳)       hourglass not done
+[3] (⏸️..⏺️)    pause button..record button
+[1] (Ⓜ️)       circled M
+[2] (▪️..▫️)    black small square..white small square
+[1] (▶️)       play button
+[1] (◀️)       reverse button
+[4] (◻️..◾)    white medium square..black medium-small square
+[2] (☀️..☁️)    sun..cloud
+[2] (☂️..☃️)    umbrella..snowman
+[1] (☄️)       comet
+[1] (☎️)       telephone
+[1] (☑️)       check box with check
+[2] (☔..☕)    umbrella with rain drops..hot beverage
+[1] (☘️)       shamrock
+[1] (☝️)       index pointing up
+[1] (☠️)       skull and crossbones
+[2] (☢️..☣️)    radioactive..biohazard
+[1] (☦️)       orthodox cross
+[1] (☪️)       star and crescent
+[1] (☮️)       peace symbol
+[1] (☯️)       yin yang
+[2] (☸️..☹️)    wheel of dharma..frowning face
+[1] (☺️)       smiling face
+[1] (♀️)       female sign
+[1] (♂️)       male sign
+12] (♈..♓)    Aries..Pisces
+[1] (♟️)       chess pawn
+[1] (♠️)       spade suit
+[1] (♣️)       club suit
+[2] (♥️..♦️)    heart suit..diamond suit
+[1] (♨️)       hot springs
+[1] (♻️)       recycling symbol
+[1] (♾️)       infinity
+[1] (♿)       wheelchair symbol
+[1] (⚒️)       hammer and pick
+[1] (⚓)       anchor
+[1] (⚔️)       crossed swords
+[1] (⚕️)       medical symbol
+[2] (⚖️..⚗️)    balance scale..alembic
+[1] (⚙️)       gear
+[2] (⚛️..⚜️)    atom symbol..fleur-de-lis
+[2] (⚠️..⚡)    warning..high voltage
+[1] (⚧️)       transgender symbol
+[2] (⚪..⚫)    white circle..black circle
+[2] (⚰️..⚱️)    coffin..funeral urn
+[2] (⚽..⚾)    soccer ball..baseball
+[2] (⛄..⛅)    snowman without snow..sun behind cloud
+[1] (⛈️)       cloud with lightning and rain
+[1] (⛎)       Ophiuchus
+[1] (⛏️)       pick
+[1] (⛑️)       rescue worker’s helmet
+[1] (⛓️)       chains
+[1] (⛔)       no entry
+[1] (⛩️)       shinto shrine
+[1] (⛪)       church
+[2] (⛰️..⛱️)    mountain..umbrella on ground
+[2] (⛲..⛳)    fountain..flag in hole
+[1] (⛴️)       ferry
+[1] (⛵)       sailboat
+[3] (⛷️..⛹️)    skier..person bouncing ball
+[1] (⛺)       tent
+[1] (⛽)       fuel pump
+[1] (✂️)       scissors
+[1] (✅)       check mark button
+[5] (✈️..✌️)    airplane..victory hand
+[1] (✍️)       writing hand
+[1] (✏️)       pencil
+[1] (✒️)       black nib
+[1] (✔️)       check mark
+[1] (✖️)       multiply
+[1] (✝️)       latin cross
+[1] (✡️)       star of David
+[1] (✨)       sparkles
+[2] (✳️..✴️)    eight-spoked asterisk..eight-pointed star
+[1] (❄️)       snowflake
+[1] (❇️)       sparkle
+[1] (❌)       cross mark
+[1] (❎)       cross mark button
