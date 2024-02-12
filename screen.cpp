@@ -21,6 +21,7 @@
 #include "widgetDeco.hpp"
 #include "widgetANSI.hpp"
 #include "widgetTextFile.hpp"
+#include "widgetDialog.hpp"
 #include "utils.hpp"
 
 #define STATUS_TEXT_MAXLENGTH	256
@@ -151,6 +152,12 @@ void initWidgets() {
 	WidgetClock* wClock = new WidgetClock(L"CLOCK");
 	Widget* wContent = new Widget(L"Content 🙏");
 		
+	WidgetDialog* wDialog = new WidgetDialog(L"INTRO", "test.txt");
+	int dialSizeX = 44;
+	int dialSizeY = 12;
+	wDialog->setPos({(termSize.x / 2) - (dialSizeX / 2), (termSize.y / 2) - (dialSizeY / 2)});
+	wDialog->setSize({dialSizeX, dialSizeY});
+
 	wHeader->setType(decoType::STRIPE);
 	wHeader->setColorPair(colorPairs::YELLOW_ON_BLACK);
 	wmgr->addWidget(1, wHeader, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 80, 4);
@@ -158,6 +165,8 @@ void initWidgets() {
 	wmgr->addWidget(2, wClock, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 80, 9);
 
 	wmgr->addWidget(3, wContent, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 80, 24 - 13);
+
+	wmgr->addWidget(0, wDialog, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, dialSizeX, dialSizeY);
 
 	wmgr->refreshWidgetsSizes(termSize.x, termSize.y);
 	wrefresh(stdscr);

@@ -19,10 +19,15 @@ WidgetManager* WidgetManager::getInstance() {
 }
 
 void WidgetManager::drawWidgets() {
+    /*
     for (auto wRow : widgets) {
         for (auto w : wRow) {
             w->mainDraw((w == this->selectedWidget));
         }
+    }
+    */
+    for (auto w : widgetsFlat) {
+        w->mainDraw((w == this->selectedWidget));
     }
 }
 
@@ -80,6 +85,10 @@ bool WidgetManager::addWidget(unsigned short _row, Widget* _widget, wSizeMode _m
     _widget->fixedV = _v;
 
     this->widgetsFlat.push_back(_widget);
+
+    // == Floating widget on row 0 only pushed in widgetsFlat
+    if (!_row)
+        return true;
 
     if (_row > this->widgets.size() + 1) {
         // missing rows !
