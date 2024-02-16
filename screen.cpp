@@ -1,8 +1,6 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <chrono>
-#include <sys/time.h> // gettimeofday()
 
 #ifdef _WIN32
 	//#include <windows.h>
@@ -46,11 +44,7 @@ v2d termSize;
 static ScreenState screenState {ScreenState::NORMAL};
 
 
-long long timeInMilliseconds() {
-    struct timeval tv;
-    gettimeofday(&tv,NULL);
-    return (((long long)tv.tv_sec)*1000)+(tv.tv_usec/1000);
-}
+
 
 
 //namespace ScreenWidget {
@@ -150,13 +144,15 @@ void initWidgets() {
 	// == HEADER ROW 1
 	WidgetDeco* wHeader = new WidgetDeco(L"HEADER ♞");
 	WidgetClock* wClock = new WidgetClock(L"CLOCK");
-	Widget* wContent = new Widget(L"Content 🙏");
-		
+	Widget* wContent = new WidgetDialog(L"Content 🙏", "makefile"); //Widget(L"Content 🙏");
+
+	/*
 	WidgetDialog* wDialog = new WidgetDialog(L"INTRO", "test.txt");
 	int dialSizeX = 44;
 	int dialSizeY = 12;
 	wDialog->setPos({(termSize.x / 2) - (dialSizeX / 2), (termSize.y / 2) - (dialSizeY / 2)});
 	wDialog->setSize({dialSizeX, dialSizeY});
+	*/	
 
 	wHeader->setType(decoType::STRIPE);
 	wHeader->setColorPair(colorPairs::YELLOW_ON_BLACK);
@@ -166,7 +162,7 @@ void initWidgets() {
 
 	wmgr->addWidget(3, wContent, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 80, 24 - 13);
 
-	wmgr->addWidget(0, wDialog, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, dialSizeX, dialSizeY);
+	//wmgr->addWidget(0, wDialog, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, dialSizeX, dialSizeY);
 
 	wmgr->refreshWidgetsSizes(termSize.x, termSize.y);
 	wrefresh(stdscr);
