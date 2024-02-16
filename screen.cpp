@@ -339,21 +339,11 @@ void screenResize() {
 	termSize.x = w;
 	termSize.y = h;
 	swprintf(statusText, STATUS_TEXT_MAXLENGTH, L" \u265E A-DASH ♞ v0.1 w = [%d, %d]", termSize.x, termSize.y); 
-
-	//statusText = L("A-DASH v0.1 [" << termSize.x << ", " << termSize.y << "]");
-	//std::cout << "RESIZE [" << termSize.x << ", " << termSize.y << "]" << std::endl;
-
+/*
 	std::ostringstream logMsg;
 	logMsg << "RESIZE [" << termSize.x << ", " << termSize.y << "]" << std::endl;
 	Utils::Log(logMsg.str());
-	//swprintf(statusText, STATUS_TEXT_MAXLENGTH, L"EFadgasdfgsa"); 
-	//swprintf ( statusText, 100, L"The half of %d is %d", 80, 80/2 );
-	//snprintf(sstatusr, STATUS_RIGHT_MESSAGE_SIZE, "LINES = %d   CHARS = %d   [%dx%d]\n", fc->nbLines, fc->nbChars, termw, termh);
-
-	//printf("resize signal new size = [%d , %d]\n", w, h);
-	//sprintf(global.debug, "[%d , %d]", w, h);
-
-
+*/
 }
 
 void screenExit() {
