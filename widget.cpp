@@ -91,8 +91,8 @@ void Widget::drawBorder(bool forceSelection) {
 void Widget::mainDraw(bool forceSelection) {
     werase(this->win);
     //wbkgd(this->win, COLOR_PAIR(this->colorPair));
-    wattron(this->win, COLOR_PAIR(this->colorPair) | A_BOLD);   
-
+    wattron(this->win, COLOR_PAIR(this->colorPair) | A_BOLD);    
+    
     if (bBorder && !forceSelection) {
         this->drawBorder(false);
     }

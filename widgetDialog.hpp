@@ -22,6 +22,9 @@ public:
     ~WidgetDialog();
     void draw();
     virtual void handleKey(int _keycode);
+
+    void addDialog(std::vector<std::wstring>& _lines);
+    void addDialog();
 };
 
 #endif

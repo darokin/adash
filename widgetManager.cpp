@@ -84,9 +84,11 @@ bool WidgetManager::addWidget(unsigned short _row, Widget* _widget, wSizeMode _m
     _widget->fixedH = _h;
     _widget->fixedV = _v;
 
+    _widget->rowIndex = _row;
+
     this->widgetsFlat.push_back(_widget);
 
-    // == Floating widget on row 0 only pushed in widgetsFlat
+    // == Floating widget on row 0 pushed in widgetsFlat ONLY
     if (!_row)
         return true;
 
@@ -158,6 +160,19 @@ void WidgetManager::refreshWidgetsSizes(unsigned short _termCols, unsigned short
             startX += tmpSize.x;
         }
         startY += tmpSize.y;
+    }
+
+    // == Update floating widgets 
+    for (auto w : widgetsFlat) {
+        if (w->rowIndex)
+            continue;
+        tmpSize.x = w->fixedH;
+        tmpSize.y = w->fixedV;
+        tmpPos.x = (termCols - w->fixedH) / 2.0;
+        tmpPos.y = (termLines - w->fixedV) / 2.0;
+        w->setPos(tmpPos);
+        w->setSize(tmpSize);
+        w->refreshPosAndSize();
     }
 }
 

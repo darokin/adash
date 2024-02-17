@@ -21,14 +21,22 @@
 // = TODO : add position
 WidgetDialog::WidgetDialog(std::wstring _title, const char* _ansiFilePath) : WidgetTextFile::WidgetTextFile(_title, _ansiFilePath) {
     dialogTimeStart = Utils::timeInMilliseconds();
-    dialog = new ModuleDialog(this->win, this->size.x - 4, this->size.x - 4);
-    dialog->initText(contentLines);
 }
 
 WidgetDialog::~WidgetDialog() {
     //if (txtFile.is_open())
     //    txtFile.close();
 }
+
+void WidgetDialog::addDialog(std::vector<std::wstring>& _lines) {
+    dialog = new ModuleDialog(this->win, this->size.x - 4, this->size.y - 4);
+    dialog->initText(_lines);
+}
+
+void WidgetDialog::addDialog() {
+    this->addDialog(this->contentLines);
+}
+
 
 void WidgetDialog::handleKey(int _keycode) {
     switch (_keycode)
@@ -55,5 +63,8 @@ void WidgetDialog::draw() {
     wattroff(this->win, COLOR_PAIR(this->colorPair) | A_BOLD | A_REVERSE);   
 
     dialog->draw(timeLapsedMs);
+
+    //if (timeLapsedMs < 2000)
+    //    wrefresh(this->win);
 }
 

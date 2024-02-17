@@ -14,6 +14,8 @@ static const wchar_t* cursBlock = L"█";
     #include <ncursesw/ncurses.h>
 #endif
 
+#include "utils.hpp"
+
 struct dialogSequence {
     std::vector<wchar_t*> lines;
     int nbLines;
@@ -22,14 +24,15 @@ struct dialogSequence {
 
 class ModuleDialog {
 private:
-    WINDOW *win;    
+    WINDOW *win;
+    v2d startPos {1, 1};  
     std::vector<dialogSequence*> sequences{};
     size_t seqIndex {0};
     long long seqTimeStart {0};
     unsigned short nbColumns;
     unsigned short lineMax {0};
     unsigned short lineMaxForced {0};
-    float msPerChar {100.f};
+    float msPerChar {10.f};
     bool blink {false};
     bool centered {false};
 public:

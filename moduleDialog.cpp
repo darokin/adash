@@ -18,7 +18,7 @@ void ModuleDialog::draw(long long _timeCurrent) {
     //const wchar_t* cursBlock = L"█";
     unsigned short nbCharsToShow {0};
     unsigned short x {0};
-    unsigned short y {0};
+    unsigned short y {(unsigned short)this->startPos.y};
     unsigned short xdec {0}; // dec if centered
     unsigned short slen {0}; // current string length
     nbCharsToShow = (_timeCurrent - this->seqTimeStart) / this->msPerChar;
@@ -28,23 +28,24 @@ void ModuleDialog::draw(long long _timeCurrent) {
         slen = wcslen(s);
         xdec = (this->centered ? (this->nbColumns - slen) / 2 : 0);
         if (wcslen(s) > nbCharsToShow) {
-            mvwaddnwstr(win, y, 0 + xdec, s, nbCharsToShow);
-            x = nbCharsToShow;
+            mvwaddnwstr(win, y, this->startPos.x + xdec, s, nbCharsToShow);
+            x = nbCharsToShow + this->startPos.x + xdec;
             y++;
             break;    
         }
-        mvwaddwstr(win, y, 0 + xdec, s);
+        mvwaddwstr(win, y, this->startPos.x + xdec, s);
         nbCharsToShow -= slen;
-        x = slen - 1; 
+        x = this->startPos.x + xdec + slen - 1; 
         y++;
     } 
     if (this->blink)
         mvwaddwstr(win, y - 1, x, ((int(_timeCurrent / this->msPerChar) % 2) ? cursBlock : L"_"));
-
+    /*
     std::wstringstream wss;
     wss << L"sequences["<<this->seqIndex<<"]->nbChars = ["<< this->sequences[this->seqIndex]->nbChars << "]";
     wss << L"StartTime = '" << this->seqTimeStart << "' nbCharsToShow [" << nbCharsToShow << "] ; _timeCurrent = '" << _timeCurrent << "'";
     mvwaddnwstr(this->win, 3, 1, wss.str().c_str(), 129);
+    */
 }
 
 void ModuleDialog::dialogPrev(long long _timeCurrent) {

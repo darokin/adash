@@ -64,6 +64,8 @@ public:
     v2d         size{80, 25};
     int         colorPair;
 
+    unsigned short rowIndex; // to know if the widget is floating (row == 0)
+
     wSizeMode modeH;
     wSizeMode modeV;
     unsigned int fixedH;
