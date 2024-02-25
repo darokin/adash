@@ -164,12 +164,12 @@ void initWidgets() {
 
 	wmgr->addWidget(0, wDialog, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, dialSizeX, dialSizeY);
 
-	wmgr->refreshWidgetsSizes(80, 25);//termSize.x, termSize.y);
+	wmgr->refreshWidgetsSizes(termSize.x, termSize.y);
 
 	wContent->addDialog();
 	wDialog->addDialog();
 
-	//wrefresh(stdscr);
+	wrefresh(stdscr);
 }
 
 
