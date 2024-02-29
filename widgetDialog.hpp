@@ -4,6 +4,7 @@
 #include "screen.hpp"
 #include "widget.hpp"
 #include "widgetTextFile.hpp"
+#include "moduleDialog.hpp"
 
 extern v2d termSize;
 
@@ -14,19 +15,16 @@ extern v2d termSize;
 
 class WidgetDialog : public WidgetTextFile {
 private:
-    //std::wifstream txtFile;
-    //std::vector<std::wstring> contentLines{};
-    //int cursorY {0};
-    std::vector<unsigned short[2]> seqStartsInContent{};
-    int readSeqIndex; // Reading sequence number
-
-    //std::vector<dialogSequence> dialogSequences{};
-    std::vector<std::vector<wchar_t*>> dialogSequences{};
+    long long dialogTimeStart;
+    ModuleDialog* dialog;
 public:
     WidgetDialog(std::wstring _title, const char* _ansiFilePath);
     ~WidgetDialog();
     void draw();
     virtual void handleKey(int _keycode);
+
+    void addDialog(std::vector<std::wstring>& _lines);
+    void addDialog();
 };
 
 #endif

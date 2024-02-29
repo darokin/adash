@@ -2,6 +2,8 @@
 #define ADASH_UTILS_H
 
 #include <time.h>
+#include <sys/time.h> // gettimeofday()
+//#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <algorithm> 
@@ -20,15 +22,21 @@ namespace Utils {
     // == DATE and TIME =======================================================
     inline std::string getCurrentDateTime(std::string s){
         time_t now = time(0);
-        struct tm  timeinfo;
-        char  buf[80];
+        struct tm timeinfo;
+        char buf[80];
         timeinfo = *localtime(&now);
-        if(s=="now")
+        if (s == "now")
             strftime(buf, sizeof(buf), "%Y-%m-%d %X", &timeinfo);
-        else if(s=="date")
+        else if (s == "date")
             strftime(buf, sizeof(buf), "%Y-%m-%d", &timeinfo);
         return std::string(buf);
     };
+
+    inline long long timeInMilliseconds() {
+        struct timeval tv;
+        gettimeofday(&tv, NULL);
+        return (((long long)tv.tv_sec) * 1000) + (tv.tv_usec / 1000);
+    }
 
     // == LOG =======================================================
     inline void Log(std::string logMsg){

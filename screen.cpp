@@ -1,8 +1,6 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <chrono>
-#include <sys/time.h> // gettimeofday()
 
 #ifdef _WIN32
 	//#include <windows.h>
@@ -46,11 +44,7 @@ v2d termSize;
 static ScreenState screenState {ScreenState::NORMAL};
 
 
-long long timeInMilliseconds() {
-    struct timeval tv;
-    gettimeofday(&tv,NULL);
-    return (((long long)tv.tv_sec)*1000)+(tv.tv_usec/1000);
-}
+
 
 
 //namespace ScreenWidget {
@@ -150,16 +144,18 @@ void initWidgets() {
 	// == HEADER ROW 1
 	WidgetDeco* wHeader = new WidgetDeco(L"HEADER ♞");
 	WidgetClock* wClock = new WidgetClock(L"CLOCK");
-	Widget* wContent = new Widget(L"Content 🙏");
-		
+	WidgetDialog* wContent = new WidgetDialog(L"Content 🙏", "makefile"); //Widget(L"Content 🙏");
+
+	
 	WidgetDialog* wDialog = new WidgetDialog(L"INTRO", "test.txt");
 	int dialSizeX = 44;
 	int dialSizeY = 12;
-	wDialog->setPos({(termSize.x / 2) - (dialSizeX / 2), (termSize.y / 2) - (dialSizeY / 2)});
+	wDialog->setPos({2, 2}); //(termSize.x / 2) - (dialSizeX / 2), (termSize.y / 2) - (dialSizeY / 2)});
 	wDialog->setSize({dialSizeX, dialSizeY});
 
 	wHeader->setType(decoType::STRIPE);
 	wHeader->setColorPair(colorPairs::YELLOW_ON_BLACK);
+
 	wmgr->addWidget(1, wHeader, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 80, 4);
 
 	wmgr->addWidget(2, wClock, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 80, 9);
@@ -169,6 +165,10 @@ void initWidgets() {
 	wmgr->addWidget(0, wDialog, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, dialSizeX, dialSizeY);
 
 	wmgr->refreshWidgetsSizes(termSize.x, termSize.y);
+
+	wContent->addDialog();
+	wDialog->addDialog();
+
 	wrefresh(stdscr);
 }
 
@@ -343,21 +343,11 @@ void screenResize() {
 	termSize.x = w;
 	termSize.y = h;
 	swprintf(statusText, STATUS_TEXT_MAXLENGTH, L" \u265E A-DASH ♞ v0.1 w = [%d, %d]", termSize.x, termSize.y); 
-
-	//statusText = L("A-DASH v0.1 [" << termSize.x << ", " << termSize.y << "]");
-	//std::cout << "RESIZE [" << termSize.x << ", " << termSize.y << "]" << std::endl;
-
+/*
 	std::ostringstream logMsg;
 	logMsg << "RESIZE [" << termSize.x << ", " << termSize.y << "]" << std::endl;
 	Utils::Log(logMsg.str());
-	//swprintf(statusText, STATUS_TEXT_MAXLENGTH, L"EFadgasdfgsa"); 
-	//swprintf ( statusText, 100, L"The half of %d is %d", 80, 80/2 );
-	//snprintf(sstatusr, STATUS_RIGHT_MESSAGE_SIZE, "LINES = %d   CHARS = %d   [%dx%d]\n", fc->nbLines, fc->nbChars, termw, termh);
-
-	//printf("resize signal new size = [%d , %d]\n", w, h);
-	//sprintf(global.debug, "[%d , %d]", w, h);
-
-
+*/
 }
 
 void screenExit() {

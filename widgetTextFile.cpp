@@ -17,52 +17,15 @@
 #include "cursesAnsi.hpp"
 
 WidgetTextFile::WidgetTextFile(std::wstring _title, const char* _ansiFilePath) : Widget::Widget(_title) {
-    
-    /*
-    this->bBorder = false;
-    txtFile.open(_ansiFilePath);
-    if (!txtFile.is_open()) {
-        std::cout << "Unable to open ANSI file '" << _ansiFilePath << "'" << std::endl; 
-        return;
-    }
-
-    std::wstring _line;
-    //this->txtFile.seekg(0);
-
+    // TODO : tester ouverture et rename file
+    std::wifstream wif(_ansiFilePath);
+    wif.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t>));
     std::wstringstream wss;
-    wss << txtFile.rdbuf();
-    //wstr = wss.str();
-    txtFile.close();
-    */
-    
-
-    //std::wstring readFile(const char* filename)
-    //{
-        //txtFile.open(_ansiFilePath);
-        std::wifstream wif(_ansiFilePath);
-        wif.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t>));
-        std::wstringstream wss;
-        wss << wif.rdbuf();
-        //return wss.str();
-    //}
-
-    //  usage
-    //std::wstring wstr2;
-    //wstr2 = readFile("C:\\yourUtf8File.txt");
-    //wcout << wstr2;
-
-
+    wss << wif.rdbuf();
 
     std::wstring _line;
-    int dd = 0;
-    while (getline(wss, _line)) {
+    while (getline(wss, _line))
         this->contentLines.push_back(_line);
-        // dd++;
-        // if (dd > 40)
-        //     break;
-    }
-    this->contentLines.push_back(L"ENDDDDDD");
- 
 }
 
 WidgetTextFile::~WidgetTextFile() {
