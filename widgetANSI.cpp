@@ -31,8 +31,10 @@ void WidgetANSI::draw() {
 
     if (!ansiFile.is_open())
         return;
+    
     std::string _line;
     int x{0}, y{1};
+    this->ansiFile.clear(); // clear EOF flag
     this->ansiFile.seekg(0);
     while (getline(this->ansiFile, _line)) {
         if (!cursesANSI::mvwaddnANSIstr(this->win, y, x, _line, this->size.x))

@@ -144,7 +144,7 @@ void initWidgets() {
 	// == HEADER ROW 1
 	WidgetDeco* wHeader = new WidgetDeco(L"HEADER ♞");
 	WidgetClock* wClock = new WidgetClock(L"CLOCK");
-	WidgetDialog* wContent = new WidgetDialog(L"Content 🙏", "makefile"); //Widget(L"Content 🙏");
+	//WidgetDialog* wContent = new WidgetDialog(L"Content 🙏", "makefile"); //Widget(L"Content 🙏");
 
 	
 	WidgetDialog* wDialog = new WidgetDialog(L"INTRO", "test.txt");
@@ -156,17 +156,19 @@ void initWidgets() {
 	wHeader->setType(decoType::STRIPE);
 	wHeader->setColorPair(colorPairs::YELLOW_ON_BLACK);
 
-	wmgr->addWidget(1, wHeader, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 80, 4);
+	wmgr->addWidget(1, wHeader, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 84, 4);
 
-	wmgr->addWidget(2, wClock, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 80, 9);
+	wmgr->addWidget(2, wClock, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 84, 9);
 
-	wmgr->addWidget(3, wContent, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 80, 24 - 13);
+	WidgetANSI* widgetAnsi = new WidgetANSI(L"ANSI widget", "./adash_out01.ans");
+	wmgr->addWidget(3, widgetAnsi, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 84, 42);//24 - 13);
+	//wmgr->addWidget(3, wContent, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, 80, 24 - 13);
 
-	wmgr->addWidget(0, wDialog, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, dialSizeX, dialSizeY);
+	//wmgr->addWidget(0, wDialog, wSizeMode::MODE_FIX, wSizeMode::MODE_FIX, dialSizeX, dialSizeY);
 
 	wmgr->refreshWidgetsSizes(termSize.x, termSize.y);
 
-	wContent->addDialog();
+	//wContent->addDialog();
 	wDialog->addDialog();
 
 	wrefresh(stdscr);
